@@ -63,7 +63,7 @@ Now let's do the create operation:
 
 ```javascript
 // Create a project
-app.post('/api/projects', await (req, res) => {
+app.post('/api/projects', async (req, res) => {
   const project = new Project({
     name: req.body.name,
     color: req.body.color
