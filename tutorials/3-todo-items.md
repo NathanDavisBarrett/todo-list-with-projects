@@ -153,7 +153,7 @@ We can pass both the projectID and the itemID to `Item.findOne()` to find the it
 You can test this with:
 
 ```
-curl -X PUT -d '{"text": "do homework", "completed": true}' -H 'Content-Type: application/json' localhost:3000/api/projects/6052907405441e072e94b6aa/items
+curl -X PUT -d '{"text": "do homework", "completed": true}' -H 'Content-Type: application/json' localhost:3000/api/projects/6052907405441e072e94b6aa/items/6052a95e1ea3a70d5bc50e71
 ```
 
 The returned object should now be completed:
