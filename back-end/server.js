@@ -18,4 +18,28 @@ mongoose.connect('mongodb://localhost:27017/todo', {
   useUnifiedTopology: true
 });
 
+// Create a scheme for projects
+const projectSchema = new mongoose.Schema({
+  name: String,
+  color: String
+});
+
+// Create a model for projects
+const Project = mongoose.model('Project', projectSchema);
+
+// Create a project
+app.post('/api/projects', async (req, res) => {
+  const project = new Project({
+    name: req.body.name,
+    color: req.body.color
+  });
+  try {
+    await project.save();
+    res.send(project);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
 app.listen(3000, () => console.log('Server listening on port 3000!'));
