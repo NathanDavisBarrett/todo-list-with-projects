@@ -53,4 +53,84 @@ app.get('/api/projects', async (req, res) => {
   }
 });
 
+// Schema for items
+const itemSchema = new mongoose.Schema({
+    project: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Project'
+    },
+    text: String,
+    completed: Boolean,
+});
+
+// Model for items
+const Item = mongoose.model('Item',itemSchema);
+
+app.post('/api/projects/:projectID/items', async (req, res) => {
+    try {
+        let project = await Project.findOne({_id: req.params.projectID});
+        if (!project) {
+            res.send(404);
+            return;
+        }
+        let item = new Item({
+            project: project,
+            text: req.body.text,
+            completed: req.body.completed,
+        });
+        await item.save();
+        res.send(item);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
+app.get('/api/projects/:projectID/items', async (req, res) => {
+    try {
+        let project = await Project.findOne({_id: req.params.projectID});
+        if (!project) {
+            res.send(404);
+            return;
+        }
+        let items = await Item.find({project:project});
+        res.send(items);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
+app.put('/api/projects/:projectID/items/:itemID', async (req, res) => {
+    try {
+        let item = await Item.findOne({_id:req.params.itemID, project: req.params.projectID});
+        if (!item) {
+            res.send(404);
+            return;
+        }
+        item.text = req.body.text;
+        item.completed = req.body.completed;
+        await item.save();
+        res.send(item);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
+app.delete('/api/projects/:projectID/items/:itemID', async (req, res) => {
+    try {
+        let item = await Item.findOne({_id:req.params.itemID, project: req.params.projectID});
+        if (!item) {
+            res.send(404);
+            return;
+        }
+        await item.delete();
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
 app.listen(3000, () => console.log('Server listening on port 3000!'));
