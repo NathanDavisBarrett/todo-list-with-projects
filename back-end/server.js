@@ -42,4 +42,15 @@ app.post('/api/projects', async (req, res) => {
   }
 });
 
+// Get a list of all projects
+app.get('/api/projects', async (req, res) => {
+  try {
+    let projects = await Project.find();
+    res.send(projects);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
 app.listen(3000, () => console.log('Server listening on port 3000!'));
